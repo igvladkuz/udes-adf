@@ -1,0 +1,9 @@
+{
+	"name": "ikdf1",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "474593d3-025a-41ca-a67e-6b90566392da",
+		"tenantId": "9b7cbd77-6d6b-4879-8aba-63d7dfb18472"
+	}
+}

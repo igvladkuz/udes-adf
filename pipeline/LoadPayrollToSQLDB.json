@@ -1,0 +1,35 @@
+{
+	"name": "LoadPayrollToSQLDB",
+	"properties": {
+		"description": "Load Payroll 2021 To SQL DB",
+		"activities": [
+			{
+				"name": "LoadPayroll2021",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "loadPayrol2SQLDB",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-09-05T20:38:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
