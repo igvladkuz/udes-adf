@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ikdf1"
+		},
+		"dl_ikusa0_accountKey": {
+			"value": ""
+		},
+		"dl_ikusa1_accountKey": {
+			"value": ""
+		},
+		"sa_ikdp1_connectionString": {
+			"value": ""
+		},
+		"sql_nycpayroll_connectionString": {
+			"value": ""
+		},
+		"dl_ikusa0_properties_typeProperties_url": {
+			"value": "https://ikusa0.dfs.core.windows.net/"
+		},
+		"dl_ikusa1_properties_typeProperties_url": {
+			"value": "https://ikusa1.dfs.core.windows.net/"
+		}
+	}
+}

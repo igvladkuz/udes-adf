@@ -1,0 +1,104 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ikdf1"
+		},
+		"dl_ikusa0_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'dl_ikusa0'"
+		},
+		"dl_ikusa1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'dl_ikusa1'"
+		},
+		"sa_ikdp1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sa_ikdp1'"
+		},
+		"sql_nycpayroll_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sql_nycpayroll'"
+		},
+		"dl_ikusa0_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ikusa0.dfs.core.windows.net/"
+		},
+		"dl_ikusa1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ikusa1.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ikdf1_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"dl_ikusa0_accountKey": {
+						"value": "[parameters('dl_ikusa0_accountKey')]"
+					},
+					"dl_ikusa1_accountKey": {
+						"value": "[parameters('dl_ikusa1_accountKey')]"
+					},
+					"sa_ikdp1_connectionString": {
+						"value": "[parameters('sa_ikdp1_connectionString')]"
+					},
+					"sql_nycpayroll_connectionString": {
+						"value": "[parameters('sql_nycpayroll_connectionString')]"
+					},
+					"dl_ikusa0_properties_typeProperties_url": {
+						"value": "[parameters('dl_ikusa0_properties_typeProperties_url')]"
+					},
+					"dl_ikusa1_properties_typeProperties_url": {
+						"value": "[parameters('dl_ikusa1_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ikdf1_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ikdf1_ArmTemplate_0')]"
+			]
+		}
+	]
+}
