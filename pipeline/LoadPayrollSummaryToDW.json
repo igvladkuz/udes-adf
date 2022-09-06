@@ -1,0 +1,50 @@
+{
+	"name": "LoadPayrollSummaryToDW",
+	"properties": {
+		"activities": [
+			{
+				"name": "LoadPayrollSummary",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "loadAggregatePayrollData2DW",
+						"type": "DataFlowReference",
+						"parameters": {
+							"fiscalYear": {
+								"value": "@pipeline().parameters.fiscalYear",
+								"type": "Expression"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "dl_ikusa1",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "ikufs1/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"fiscalYear": {
+				"type": "int"
+			}
+		},
+		"annotations": []
+	}
+}

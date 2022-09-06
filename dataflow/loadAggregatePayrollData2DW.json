@@ -1,5 +1,5 @@
 {
-	"name": "aggregatePayrollData",
+	"name": "loadAggregatePayrollData2DW",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
