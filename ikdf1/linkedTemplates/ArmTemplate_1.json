@@ -13,66 +13,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/loadTitle2DW')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DL_TitleMaster",
-								"type": "DatasetReference"
-							},
-							"name": "TitleFile"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DW_TitleMD",
-								"type": "DatasetReference"
-							},
-							"name": "TitleMDTable"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(output(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> TitleFile",
-						"TitleFile sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     staged: true,",
-						"     allowCopyCommand: true,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          TitleCode,",
-						"          TitleDescription",
-						"     )) ~> TitleMDTable"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/aggregatePayrollData')]",
+			"name": "[concat(parameters('factoryName'), '/loadAggregatePayrollData2DW')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -361,9 +302,7 @@
 				"annotations": [],
 				"lastPublishTime": "2022-09-05T20:38:30Z"
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/loadTitle2DW')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/LoadPayrollToSQLDB')]",
@@ -411,6 +350,71 @@
 				"lastPublishTime": "2022-09-05T20:38:30Z"
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LoadPayrollSummaryToDW')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LoadPayrollSummary",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "loadAggregatePayrollData2DW",
+								"type": "DataFlowReference",
+								"parameters": {
+									"fiscalYear": {
+										"value": "@pipeline().parameters.fiscalYear",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"PayrollTableSQLDB": {},
+									"PayrollHistoryFile": {},
+									"PayrollSummaryTableSA": {}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "dl_ikusa1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "ikufs1/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fiscalYear": {
+						"type": "int"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/loadAggregatePayrollData2DW')]"
+			]
 		}
 	]
 }
